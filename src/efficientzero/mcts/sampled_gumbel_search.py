@@ -24,7 +24,6 @@ same code path; the only difference is how root actions are sampled.
 """
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass
 
 import numpy as np

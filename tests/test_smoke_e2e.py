@@ -3,8 +3,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from efficientzero.training.trainer import Trainer
 from efficientzero.utils.config import load_config
 
@@ -12,7 +10,6 @@ from efficientzero.utils.config import load_config
 CONFIG_PATH = Path(__file__).resolve().parents[1] / "configs" / "smoke.yaml"
 
 
-@pytest.mark.timeout(300)
 def test_smoke_trains_a_few_steps(tmp_path):
     cfg = load_config(
         CONFIG_PATH,

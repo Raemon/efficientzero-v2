@@ -10,7 +10,6 @@ from efficientzero.envs.smoke import GymEnvWrapper
 
 
 def make_dmc_env(cfg: DictConfig, seed: int) -> GymEnvWrapper:
-    import gymnasium as gym
     from dm_control import suite
     from shimmy.dm_control_compatibility import DmControlCompatibilityV0
 
@@ -21,11 +20,11 @@ def make_dmc_env(cfg: DictConfig, seed: int) -> GymEnvWrapper:
     if str(cfg.obs_kind) == "vector":
         env = _FlattenObsWrapper(env)
     else:
-        from gymnasium.wrappers import PixelObservationWrapper, ResizeObservation, GrayScaleObservation, FrameStack
+        from gymnasium.wrappers import AddRenderObservation, FrameStackObservation, ResizeObservation
 
-        env = PixelObservationWrapper(env, pixels_only=True)
+        env = AddRenderObservation(env, render_only=True)
         env = ResizeObservation(env, shape=tuple(cfg.resize))
-        env = FrameStack(env, num_stack=int(cfg.get("frame_stack", 3)))
+        env = FrameStackObservation(env, stack_size=int(cfg.get("frame_stack", 3)))
 
     if int(cfg.get("action_repeat", 1)) > 1:
         env = _ActionRepeatWrapper(env, repeat=int(cfg.action_repeat))
@@ -35,7 +34,6 @@ def make_dmc_env(cfg: DictConfig, seed: int) -> GymEnvWrapper:
 class _FlattenObsWrapper:
     def __init__(self, env):
         import gymnasium as gym
-        import numpy as np
 
         self.env = env
         self.action_space = env.action_space

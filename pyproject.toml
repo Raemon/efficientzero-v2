@@ -20,7 +20,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-atari = ["gymnasium[atari,accept-rom-license]>=0.29", "ale-py>=0.8"]
+atari = ["ale-py>=0.10", "opencv-python>=4.9"]
 dmc = ["dm-control>=1.0.20", "shimmy[dm-control]>=1.3"]
 dev = ["pytest>=7", "ruff>=0.4"]
 

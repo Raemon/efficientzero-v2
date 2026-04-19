@@ -22,7 +22,6 @@ from pathlib import Path
 
 import numpy as np
 import torch
-import torch.nn.functional as F
 from omegaconf import DictConfig
 from tqdm import tqdm
 

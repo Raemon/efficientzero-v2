@@ -1,7 +1,6 @@
 """Forward-pass shape tests for H, G, F (vector and image, discrete and continuous)."""
 from __future__ import annotations
 
-import pytest
 import torch
 from omegaconf import OmegaConf
 

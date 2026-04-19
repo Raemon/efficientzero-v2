@@ -11,9 +11,11 @@ from efficientzero.envs.smoke import GymEnvWrapper
 
 
 def make_atari_env(cfg: DictConfig, seed: int) -> GymEnvWrapper:
+    import ale_py
     import gymnasium as gym
-    from gymnasium.wrappers import AtariPreprocessing, FrameStack
+    from gymnasium.wrappers import AtariPreprocessing, FrameStackObservation
 
+    gym.register_envs(ale_py)
     base = gym.make(str(cfg.id), frameskip=1, repeat_action_probability=0.0, full_action_space=False)
     env = AtariPreprocessing(
         base,
@@ -24,7 +26,7 @@ def make_atari_env(cfg: DictConfig, seed: int) -> GymEnvWrapper:
         grayscale_obs=bool(cfg.get("grayscale", True)),
         scale_obs=True,
     )
-    env = FrameStack(env, num_stack=int(cfg.get("frame_stack", 4)))
+    env = FrameStackObservation(env, stack_size=int(cfg.get("frame_stack", 4)))
     if bool(cfg.get("clip_reward", True)):
         env = _ClipRewardWrapper(env)
     return GymEnvWrapper(env, seed=seed)
