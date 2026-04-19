@@ -1,0 +1,77 @@
+name: atari_pong
+seed: 0
+device: auto
+
+env:
+  kind: atari
+  id: ALE/Pong-v5
+  obs_kind: image
+  action_kind: discrete
+  frame_stack: 4
+  grayscale: true
+  resize: [84, 84]
+  action_repeat: 4
+  noop_max: 30
+  episodic_life: true
+  clip_reward: true
+
+network:
+  hidden_dim: 256
+  num_blocks: 4
+  value_support_size: 51
+  value_support_min: -25.0
+  value_support_max: 25.0
+  reward_support_size: 51
+  reward_support_min: -2.0
+  reward_support_max: 2.0
+  num_continuous_action_samples: 0
+
+mcts:
+  num_simulations: 16
+  num_sampled_actions: 8
+  pb_c_init: 1.25
+  pb_c_base: 19652
+  discount: 0.997
+  gumbel_scale: 1.0
+  dirichlet_alpha: 0.3
+  dirichlet_frac: 0.25
+
+replay:
+  capacity: 1000000
+  priority_alpha: 1.0
+  priority_beta: 1.0
+  unroll_steps: 5
+  td_steps: 5
+
+actor:
+  num_envs: 1
+  collect_per_iter: 100
+  warmup_transitions: 2000
+
+trainer:
+  total_train_steps: 100000
+  batch_size: 256
+  learning_rate: 0.2
+  weight_decay: 0.0001
+  optimizer: sgd
+  sgd_momentum: 0.9
+  grad_clip: 5.0
+  target_update_interval: 400
+  loss_coefs:
+    reward: 1.0
+    policy: 1.0
+    value: 0.25
+    consistency: 2.0
+  policy_entropy_coef: 0.005
+  mixed_value_target_T1: 40000
+  mixed_value_target_T2: 20000
+  log_interval: 100
+  eval_interval: 5000
+  eval_episodes: 5
+  checkpoint_interval: 10000
+  checkpoint_dir: checkpoints/atari_pong
+
+logging:
+  wandb: true
+  project: efficientzero-v2
+  group: atari

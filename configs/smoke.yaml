@@ -1,0 +1,69 @@
+name: smoke
+seed: 0
+device: auto
+
+env:
+  kind: gym
+  id: CartPole-v1
+  obs_kind: vector
+  action_kind: discrete
+
+network:
+  hidden_dim: 64
+  num_blocks: 2
+  value_support_size: 21
+  value_support_min: -10.0
+  value_support_max: 10.0
+  reward_support_size: 21
+  reward_support_min: -2.0
+  reward_support_max: 2.0
+  num_continuous_action_samples: 0
+
+mcts:
+  num_simulations: 16
+  num_sampled_actions: 0
+  pb_c_init: 1.25
+  pb_c_base: 19652
+  discount: 0.997
+  gumbel_scale: 1.0
+  dirichlet_alpha: 0.3
+  dirichlet_frac: 0.0
+
+replay:
+  capacity: 5000
+  priority_alpha: 1.0
+  priority_beta: 1.0
+  unroll_steps: 5
+  td_steps: 5
+
+actor:
+  num_envs: 1
+  collect_per_iter: 32
+  warmup_transitions: 256
+
+trainer:
+  total_train_steps: 500
+  batch_size: 64
+  learning_rate: 0.001
+  weight_decay: 0.00001
+  optimizer: adam
+  grad_clip: 5.0
+  target_update_interval: 100
+  loss_coefs:
+    reward: 1.0
+    policy: 1.0
+    value: 0.25
+    consistency: 2.0
+  policy_entropy_coef: 0.005
+  mixed_value_target_T1: 200
+  mixed_value_target_T2: 100
+  log_interval: 25
+  eval_interval: 250
+  eval_episodes: 3
+  checkpoint_interval: 500
+  checkpoint_dir: checkpoints/smoke
+
+logging:
+  wandb: false
+  project: efficientzero-v2
+  group: smoke
